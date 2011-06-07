@@ -19,7 +19,7 @@ class RedmineGrackAuth < Rack::Auth::Basic
     permission = (@req.request_method == "POST" && Regexp.new("(.*?)/git-receive-pack$").match(@req.path_info) ? 'rw' : 'r')
 
     begin
-      open("#{url}grack/xml/#{identifier}/#{permission}", :http_basic_authentication => [auth.user, auth.pass]) {}
+      open("#{url}/grack/xml/#{identifier}/#{permission}", :http_basic_authentication => [auth.user, auth.pass]) {}
     rescue
       return false
     end
