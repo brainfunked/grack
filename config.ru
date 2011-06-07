@@ -5,15 +5,15 @@ use Rack::ShowExceptions
 require 'lib/git_http'
 
 config = {
-  :project_root          => "/srv/git",
-  :git_path              => '/usr/local/libexec/git-core/git',
+  :project_root          => '/srv/git',
+  :git_path              => '/usr/bin/git',
   :upload_pack           => true,
   :receive_pack          => true,
 
   :use_redmine_auth      => true,
   :require_ssl_for_auth  => true,
 
-  :redmine               => 'http://redmine.example.domain/'
+  :redmine               => 'redmine.example.domain'
 }
 
 

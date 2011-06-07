@@ -9,10 +9,12 @@ class RedmineGrackAuth < Rack::Auth::Basic
     url = $grackConfig[:redmine]
     return false if !url
 
+    url = $grackConfig[:require_ssl_for_auth] ? 'https://' + url : 'http://' + url
+
     creds = *auth.credentials
     user, pass = creds[0, 2]
 
-    identifier = get_project()
+    identifier = get_project
     return false if !identifier
     permission = (@req.request_method == "POST" && Regexp.new("(.*?)/git-receive-pack$").match(@req.path_info) ? 'rw' : 'r')
 
