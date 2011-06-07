@@ -50,14 +50,12 @@ class RedmineGrackAuth < Rack::Auth::Basic
   def get_project
     paths = ["(.*?)/git-upload-pack$", "(.*?)/git-receive-pack$", "(.*?)/info/refs$", "(.*?)/HEAD$", "(.*?)/objects" ]
 
-    paths.each {|re|
+    paths.each do |re|
       if m = Regexp.new(re).match(@req.path)
-        projPath = m[1];
-        dir  = projPath.gsub(/^.*\//, "")
-        identifier = projDir.gsub(/\.git$/, "")
-        return (identifier == '' ? nil : identifier)
+        identifier = m[1].match(/\/(\w+)(?:\.git)?$/)[1]
+        return ((not identifier or identifier.empty?) ? nil : identifier)
       end
-    }
+    end
 
     return nil
   end
