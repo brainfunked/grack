@@ -52,7 +52,7 @@ class RedmineGrackAuth < Rack::Auth::Basic
 
     paths.each do |re|
       if m = Regexp.new(re).match(@req.path)
-        identifier = m[1].match(/\/(\w+)(?:\.git)?$/)[1]
+        identifier = m[1].match(/^\/([-\w]+)(?:\.git)?$/)[1]
         return ((not identifier or identifier.empty?) ? nil : identifier)
       end
     end
