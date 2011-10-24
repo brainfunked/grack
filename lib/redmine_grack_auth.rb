@@ -21,7 +21,7 @@ class RedmineGrackAuth < Rack::Auth::Basic
     begin
       open("#{url}/grack/xml/#{identifier}/#{permission}", :http_basic_authentication => [user, pass]) do |f|
         f.each do |line|
-          raise "Authentication failed" if not line == "OK"
+          return false if not line == "OK"
         end
       end
     rescue
@@ -35,13 +35,13 @@ class RedmineGrackAuth < Rack::Auth::Basic
     @env = env  
     @req = Rack::Request.new(env)
 
-    return unauthorized if(not defined?($grackConfig))
-    return unauthorized if($grackConfig[:require_ssl_for_auth] && @req.scheme != "https")
+    return [500, {}, "Configuration error"] if(not defined?($grackConfig))
+    return [403, {}, "Require https"] if($grackConfig[:require_ssl_for_auth] && @req.scheme != "https")
 
     auth = Request.new(env)
     return unauthorized unless auth.provided?
     return bad_request unless auth.basic?
-    return unauthorized unless valid?(auth)
+    return [403, {}, "Authentication failed"] unless valid?(auth)
 
     env['REMOTE_USER'] = auth.username
     return @app.call(env)
